@@ -1,7 +1,6 @@
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import '../styles/colors.dart';
 
@@ -94,32 +93,36 @@ Widget defContainer({
           width: width,
           padding: const EdgeInsetsDirectional.all(8),
           decoration: BoxDecoration(
-              color: defColor, borderRadius: BorderRadius.circular(50)),
+              color: defColor, borderRadius: BorderRadius.circular(50)
+          ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (icon == true)
-                  const Image(
-                    image: AssetImage('assets/image/facebook.png'),
-                    height: 30,
+            child: FittedBox(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (icon)
+                    const Image(
+                      image: AssetImage('assets/image/social_media/facebook.png'),
+                      height: 30,
+                    ),
+                  if (icon)
+                    const SizedBox(
+                      width: 20,
+                    ),
+                  Text(
+                    text,
+                    style: const TextStyle(color: Colors.white, fontSize: 17),
                   ),
-                if (icon == true)
-                  const SizedBox(
-                    width: 26,
-                  ),
-                Text(
-                  text,
-                  style: const TextStyle(color: Colors.white, fontSize: 17),
-                ),
-                if (isRightIcon == true) const Spacer(),
-                if (isRightIcon == true)
-                  const Icon(
-                    Icons.arrow_forward_rounded,
-                    color: Colors.white,
-                  )
-              ],
+                  if (isRightIcon)
+                    const Spacer(),
+                  if (isRightIcon)
+                    const Icon(
+                      Icons.arrow_forward_rounded,
+                      color: Colors.white,
+                    )
+                ],
+              ),
             ),
           ),
         ),
@@ -130,34 +133,43 @@ Widget defTextFormField({
   required TextEditingController controller,
   TextInputType keyboard = TextInputType.name,
   String? hint,
+  int? maxLines,
+  int? maxLength,
   bool isPassword = false,
   Function()? onPressedIcon,
   required String validator,
   IconData? leftIcon,
   IconData? rightIcon,
+  Color fillColor = secondColor,
 }) =>
-    TextFormField(
-      keyboardType: keyboard,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return validator;
-        }
-        return null;
-      },
-      obscureText: isPassword,
-      controller: controller,
-      decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
-          ),
-          hintText: hint,
-          prefixIcon: Icon(leftIcon),
-          suffixIcon: IconButton(
-            onPressed: onPressedIcon,
-            icon: Icon(rightIcon),
-          ),
-          filled: true,
-          fillColor: HexColor('#fbfbfb')),
+    Padding(
+      padding: const EdgeInsets.only(bottom: 15.0),
+      child: TextFormField(
+        maxLines:maxLines ,
+        maxLength: maxLength,
+        keyboardType: keyboard,
+        validator: (value) {
+          if (value!.isEmpty) {
+            return validator;
+          }
+          return null;
+        },
+        obscureText: isPassword,
+        controller: controller,
+        decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25.0),
+            ),
+            hintText: hint,
+            prefixIcon: Icon(leftIcon),
+            suffixIcon: IconButton(
+              onPressed: onPressedIcon,
+              icon: Icon(rightIcon),
+            ),
+            filled: true,
+            fillColor: fillColor,
+        ),
+      ),
     );
 
 void navigateTo(context, widget) =>
@@ -173,7 +185,7 @@ Widget emoji(TextEditingController controller) => EmojiPicker(
       textEditingController: controller,
       // pass here the same [TextEditingController] that is connected to your input field, usually a [TextFormField]
       config: Config(
-        columns: 7,
+        columns: 11,
         emojiSizeMax: 32 *
             (foundation.defaultTargetPlatform == TargetPlatform.iOS
                 ? 1.30
@@ -206,3 +218,9 @@ Widget emoji(TextEditingController controller) => EmojiPicker(
         buttonMode: ButtonMode.MATERIAL,
       ),
     );
+
+Widget fallBack()=>Center(
+  child: CircularProgressIndicator(
+    color: defColor,
+  ),
+);

@@ -1,29 +1,37 @@
-class MassageModel {
-  late  String massage;
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class MessageModel {
+  late  String message;
   late String senderId;
   late String receiverId;
-  late String datetime;
+  late String time;
+  late DateTime dateTime;
 
-  MassageModel(
-      {required this.massage,
-        required this.datetime,
+  MessageModel(
+      {required this.message,
+        required this.time,
         required this.senderId,
         required this.receiverId,
+        required this.dateTime,
       });
 
-  MassageModel.fromJson(Map<String, dynamic> json) {
-    receiverId = json['receiverId'];
-    senderId = json['senderId'];
-    datetime = json['datetime'];
-    massage = json['massage'];
+  MessageModel.fromJson(Map<String, dynamic> json) {
+    receiverId = json['Receiver ID'];
+    senderId = json['Sender ID'];
+    time = json['Time'];
+    Timestamp firestoreTimestamp = json['datetime'];
+    DateTime date = firestoreTimestamp.toDate();
+    dateTime = date;
+    message = json['Message'];
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'receiverId': receiverId,
-      'datetime': datetime,
-      'senderId': senderId,
-      'massage': massage,
+      'Receiver ID': receiverId,
+      'Time': time,
+      'Sender ID': senderId,
+      'Message': message,
+      'datetime': dateTime,
     };
   }
 }
